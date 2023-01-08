@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<center>
+    <h3 style="font-family: System-ui;">PENYU</h3><br>
+</center>
+<div class="container">
+    <a href="/tambah_data/" class="btn btn-primary" role="button" style="font-family: System-ui;">Tambah</a><br><br>
+    <div class="table-responsive">
+        <table class="table table-bordered nomor" style="font-family: System-ui; font-size: 18px; min-width: 500px;">
+            <thead>
+                <tr style="text-align: center;">
+                  <th>No.</th>
+                  <th class="col-2">Jenis</th>
+                  <th>Gambar</th>
+                  <th class="col-6">Deskripsi</th>
+                  <th>Aksi</th>
+                </tr>
+            </thead>
+              <tbody style="text-align: center;">
+                <tr>
+                    {% for Data in penyu %}
+                  <td></td>
+                  <td>{{ Data.jenis }}</td>
+                  <td style="text-align: center;">{% if Data.gambar %}
+                    <img style="height: 225px;" src="{{ Data.gambar.url }}" alt="">
+                        {% endif %}</td>
+                  <td>{{ Data.deskripsi }}</td>
+                  <td>
+                    <a class="btn btn-outline-dark" href="{% url 'edit_1' Data.pk %}">Edit</a>
+                    <a class="btn btn-danger" style="margin-top: 5px;" href="#" role="button" onclick="hapusbuku('{{ Data.pk }}', '{{ Data.jenis }}')">Delete</a>
+                </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <script>
+  
+  function hapusbuku(id, nama) {
+    swal({
+      title: "Apakah Anda Yakin?",
+      text: "Setelah data " + nama + " dihapus, data tidak dapat dikembalData!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal("Berhasil!", "Data " + nama + " Berhasil Dihapus!", "success").then(function () {
+            window.location = "/data_penyu/delete_data/" + id;
+          });
+        }
+      });
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <h3 style="font-family: System-ui; ">PETA PENANGKARAN PENYU</h3><br><br><br>
+        <div class="col-7">
+            <div id="map" style="width: 1500px; height: 450px;"></div><br>
+        </div>
+        <div class="col-5">
+            <a href="/tambah_penangkaran/" class="btn btn-primary" role="button" style="font-family: System-ui;">Tambah</a><br><br>
+            <div class="table-responsive">
+            <table class="table table-bordered nomor" style="font-family: System-ui; font-size: 18px; min-width: 500px;">
+              <thead>
+                <tr style="text-align: center;">
+                  <th>No.</th>
+                  <th>Nama Tempat</th>
+                  <th>Titik Koordinat</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody style="text-align: center;">
+                <tr>
+                  {% for Penangkaran in kandang %}
+                  <td></td>
+                  <td>{{ Penangkaran.nama_tempat }}</td>
+                  <td>{{ Penangkaran.grs_lintang }}, {{ Penangkaran.grs_bujur }}</td>
+                  <td>
+                    <a class="btn btn-outline-dark" href="{% url 'edit_1' Penangkaran.pk %}">Edit</a>
+                    <a class="btn btn-danger"  style="margin-top: 5px;" href="#" role="button" onclick="hapusbuku('{{ Penangkaran.pk }}', '{{ Penangkaran.nama_tempat }}')">Delete</a>
+                  </td>
+                </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+
+  var map = L.map('map').setView([-5.747259497709749, 106.54841491447084], 8);
+  
+  var imagery = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+  
+  var data_penangkaran = JSON.parse("{{tempat_json|escapejs}}");
+  console.log(data_penangkaran);
+  
+  data_penangkaran.map(e=>{
+    L.marker([e.fields.grs_lintang, e.fields.grs_bujur]).addTo(map)
+  })
+  
+  function hapusbuku(id, nama) {
+    swal({
+      title: "Apakah Anda Yakin?",
+      text: "Setelah data " + nama + " dihapus, data tidak dapat dikembalPenangkaran!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal("Berhasil!", "Data " + nama + " Berhasil Dihapus!", "success").then(function () {
+            window.location = "/penangkaran/delete_penangkaran/" + id;
+          });
+        }
+      });
+  }
+</script>
+
+{% endblock %}

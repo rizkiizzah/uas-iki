@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<br>
+ <div class="container">
+    <h3 style="font-family: System-ui;">{{ Title }}</h3><br>
+    <div class="row">
+        <div class="col-md-5">
+            <form action="{% url 'edit_1' kandang.pk %}" method="POST">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <br>
+                <a href="/penangkaran/" class="btn btn-outline-dark">Kembali</a>
+                <button type="submit" value="Simpan" class="btn btn-primary">Simpan</button>
+            </form>
+        </div>
+    </div>
+ </div>
+    
+{% if pesan %}
+<script>
+    swal({
+        title: "Berhasil",
+        text : "{{pesan}}",
+        icon : "success",
+    }).then((value) => {
+        window.location.href = "/tambah_penangkaran/"
+    });  
+</script>
+{% endif %}
+
+{% endblock %}
